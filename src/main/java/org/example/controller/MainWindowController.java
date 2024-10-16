@@ -2,12 +2,17 @@ package org.example.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import org.example.model.WeatherService;
 import org.example.view.ViewFactory;
 
-public class MainWindowController extends BaseController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class MainWindowController extends BaseController implements Initializable {
 
     @FXML
     private Button buttonRefreshLeft;
@@ -87,17 +92,26 @@ public class MainWindowController extends BaseController {
     @FXML
     private Label labelRightTemp5;
 
+    private WeatherService weatherService;
+
     public MainWindowController(ViewFactory viewFactory, String fxmlName) {
         super(viewFactory, fxmlName);
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        //weatherService = WeatherServiceFactory.createWeatherService();
+    }
+
     @FXML
     void clickButtonRefreshLeft(ActionEvent event) {
-
+        //Weather weather = weatherService.getWeather();
     }
 
     @FXML
     void clickButtonRefreshRight(ActionEvent event) {
 
     }
+
+
 }
