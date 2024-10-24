@@ -3,22 +3,21 @@ package org.example.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import org.example.model.SingleDayWeather;
+import org.example.model.WeatherForecast;
 import org.example.model.WeatherService;
+import org.example.model.WeatherServiceFactory;
 import org.example.view.ViewFactory;
 
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainWindowController extends BaseController implements Initializable {
-
-    @FXML
-    private Button buttonRefreshLeft;
-
-    @FXML
-    private Button buttonRefreshRight;
 
     @FXML
     private TextField cityLeft;
@@ -33,66 +32,13 @@ public class MainWindowController extends BaseController implements Initializabl
     private TextField countryRight;
 
     @FXML
-    private Label labelLeftDay1;
+    private List<Group> groupLeftList;
 
     @FXML
-    private Label labelLeftDay2;
+    private List<Group> groupRightList;
 
-    @FXML
-    private Label labelLeftDay3;
-
-    @FXML
-    private Label labelLeftDay4;
-
-    @FXML
-    private Label labelLeftDay5;
-
-    @FXML
-    private Label labelLeftTemp1;
-
-    @FXML
-    private Label labelLeftTemp2;
-
-    @FXML
-    private Label labelLeftTemp3;
-
-    @FXML
-    private Label labelLeftTemp4;
-
-    @FXML
-    private Label labelLeftTemp5;
-
-    @FXML
-    private Label labelRightDay1;
-
-    @FXML
-    private Label labelRightDay2;
-
-    @FXML
-    private Label labelRightDay3;
-
-    @FXML
-    private Label labelRightDay4;
-
-    @FXML
-    private Label labelRightDay5;
-
-    @FXML
-    private Label labelRightTemp1;
-
-    @FXML
-    private Label labelRightTemp2;
-
-    @FXML
-    private Label labelRightTemp3;
-
-    @FXML
-    private Label labelRightTemp4;
-
-    @FXML
-    private Label labelRightTemp5;
-
-    private WeatherService weatherService;
+    private WeatherService weatherServiceLeft;
+    private WeatherService weatherServiceRight;
 
     public MainWindowController(ViewFactory viewFactory, String fxmlName) {
         super(viewFactory, fxmlName);
@@ -100,17 +46,53 @@ public class MainWindowController extends BaseController implements Initializabl
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //weatherService = WeatherServiceFactory.createWeatherService();
+        countryLeft.setText("Polska");
+        cityLeft.setText("Poznan");
+        countryRight.setText("Anglia");
+        cityRight.setText("Londyn");
+
+        weatherServiceLeft = WeatherServiceFactory.createWeatherService();
+        weatherServiceRight = WeatherServiceFactory.createWeatherService();
     }
 
     @FXML
     void clickButtonRefreshLeft(ActionEvent event) {
-        //Weather weather = weatherService.getWeather();
+        WeatherForecast weatherForecast = weatherServiceLeft.getWeather(cityLeft.getText() + "," + countryLeft.getText());
+
+        displayWeatherLeft(weatherForecast);
     }
 
     @FXML
     void clickButtonRefreshRight(ActionEvent event) {
+        WeatherForecast weatherForecast = weatherServiceRight.getWeather(cityRight.getText() + "," + countryRight.getText());
 
+        displayWeatherRight(weatherForecast);
+    }
+
+    private void displayWeatherLeft(WeatherForecast weatherForecast) {
+        Iterator<Group> groupIterator = groupLeftList.iterator();
+        Iterator<SingleDayWeather> weatherIterator = weatherForecast.getWeathers().iterator();
+        while (groupIterator.hasNext() && weatherIterator.hasNext()) {
+            Group group = groupIterator.next();
+            SingleDayWeather singleDayWeather = weatherIterator.next();
+            Label labelDay = (Label) group.getChildren().get(1);
+            Label labelTemp = (Label) group.getChildren().get(2);
+            labelDay.setText(singleDayWeather.getDate().toString());
+            labelTemp.setText(String.valueOf(singleDayWeather.getTempInCelsius()));
+        }
+    }
+
+    private void displayWeatherRight(WeatherForecast weatherForecast) {
+        Iterator<Group> groupIterator = groupRightList.iterator();
+        Iterator<SingleDayWeather> weatherIterator = weatherForecast.getWeathers().iterator();
+        while (groupIterator.hasNext() && weatherIterator.hasNext()) {
+            Group group = groupIterator.next();
+            SingleDayWeather singleDayWeather = weatherIterator.next();
+            Label labelDay = (Label) group.getChildren().get(1);
+            Label labelTemp = (Label) group.getChildren().get(2);
+            labelDay.setText(singleDayWeather.getDate().toString());
+            labelTemp.setText(String.valueOf(singleDayWeather.getTempInCelsius()));
+        }
     }
 
 

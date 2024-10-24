@@ -2,6 +2,10 @@ package org.example.model;
 
 import org.example.model.client.WeatherClient;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public class WeatherService {
 
     private final WeatherClient weatherClient;
@@ -11,6 +15,10 @@ public class WeatherService {
     }
 
     public WeatherForecast getWeather(String cityName) {
-        return weatherClient.getWeather(cityName);
+        SingleDayWeather currentWeather = weatherClient.currentWeather(cityName);
+        Collection<SingleDayWeather> forecast = weatherClient.forecast(cityName);
+        List<SingleDayWeather> result = new ArrayList<>(forecast);
+        result.add(currentWeather);
+        return new WeatherForecast(cityName, result);
     }
 }

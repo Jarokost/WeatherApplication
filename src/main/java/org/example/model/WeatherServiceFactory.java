@@ -1,6 +1,6 @@
 package org.example.model;
 
-import org.example.model.client.ExampleWeatherClient;
+import org.example.model.client.OpenWeatherAPIWeatherClient;
 import org.example.model.client.WeatherClient;
 
 public class WeatherServiceFactory {
@@ -10,6 +10,7 @@ public class WeatherServiceFactory {
     }
 
     private static WeatherClient createWeatherClient() {
-        return new ExampleWeatherClient();
+        return new OpenWeatherAPIWeatherClient();
     }
+
 }
