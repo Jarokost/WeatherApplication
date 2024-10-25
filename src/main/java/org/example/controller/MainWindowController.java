@@ -48,8 +48,8 @@ public class MainWindowController extends BaseController implements Initializabl
     public void initialize(URL url, ResourceBundle resourceBundle) {
         countryLeft.setText("Polska");
         cityLeft.setText("Poznan");
-        countryRight.setText("Anglia");
-        cityRight.setText("Londyn");
+        countryRight.setText("Hiszpania");
+        cityRight.setText("Santa Cruz De Tenerife");
 
         weatherServiceLeft = WeatherServiceFactory.createWeatherService();
         weatherServiceRight = WeatherServiceFactory.createWeatherService();

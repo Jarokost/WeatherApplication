@@ -30,7 +30,7 @@ public class OpenWeatherAPIWeatherClient implements WeatherClient {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
 
             String url = "https://api.openweathermap.org/data/2.5/weather?" +
-                    "q=" + cityName +
+                    "q=" + cityNameToNoWhiteSpaces(cityName) +
                     "&appid=" + APIKey.getApiKey() +
                     "&units=" + "metric";
             ClassicHttpRequest httpGet = ClassicRequestBuilder.get(url).build();
@@ -66,7 +66,7 @@ public class OpenWeatherAPIWeatherClient implements WeatherClient {
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
 
             String url = "https://api.openweathermap.org/data/2.5/forecast?" +
-                    "q=" + cityName +
+                    "q=" + cityNameToNoWhiteSpaces(cityName) +
                     "&appid=" + APIKey.getApiKey() +
                     "&units=" + "metric";
             ClassicHttpRequest httpGet = ClassicRequestBuilder.get(url).build();
@@ -105,5 +105,9 @@ public class OpenWeatherAPIWeatherClient implements WeatherClient {
         }
 
         return forecast;
+    }
+
+    private String cityNameToNoWhiteSpaces(String cityName) {
+        return cityName.replaceAll(" ", "%20");
     }
 }
