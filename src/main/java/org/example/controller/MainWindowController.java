@@ -6,8 +6,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import org.example.model.SingleDayWeather;
-import org.example.model.WeatherForecast;
+import org.example.model.Weather;
+import org.example.model.CurrentWeatherAndForecast;
 import org.example.model.WeatherService;
 import org.example.model.WeatherServiceFactory;
 import org.example.view.ViewFactory;
@@ -57,42 +57,35 @@ public class MainWindowController extends BaseController implements Initializabl
 
     @FXML
     void clickButtonRefreshLeft(ActionEvent event) {
-        WeatherForecast weatherForecast = weatherServiceLeft.getWeather(cityLeft.getText() + "," + countryLeft.getText());
+        CurrentWeatherAndForecast currentWeatherAndForecast = weatherServiceLeft.getWeather(cityLeft.getText() + "," + countryLeft.getText());
 
-        displayWeatherLeft(weatherForecast);
+        displayWeather(currentWeatherAndForecast, groupLeftList.iterator());
     }
 
     @FXML
     void clickButtonRefreshRight(ActionEvent event) {
-        WeatherForecast weatherForecast = weatherServiceRight.getWeather(cityRight.getText() + "," + countryRight.getText());
+        CurrentWeatherAndForecast currentWeatherAndForecast = weatherServiceRight.getWeather(cityRight.getText() + "," + countryRight.getText());
 
-        displayWeatherRight(weatherForecast);
+        displayWeather(currentWeatherAndForecast, groupRightList.iterator());
     }
 
-    private void displayWeatherLeft(WeatherForecast weatherForecast) {
-        Iterator<Group> groupIterator = groupLeftList.iterator();
-        Iterator<SingleDayWeather> weatherIterator = weatherForecast.getWeathers().iterator();
+    private void displayWeather(CurrentWeatherAndForecast currentWeatherAndForecast, Iterator<Group> groupIterator) {
+        // filling weather forecast group fields
+        Iterator<Weather> weatherIterator = currentWeatherAndForecast.getWeathers().iterator();
         while (groupIterator.hasNext() && weatherIterator.hasNext()) {
             Group group = groupIterator.next();
-            SingleDayWeather singleDayWeather = weatherIterator.next();
+            Weather weather = weatherIterator.next();
             Label labelDay = (Label) group.getChildren().get(1);
             Label labelTemp = (Label) group.getChildren().get(2);
-            labelDay.setText(singleDayWeather.getDate().toString());
-            labelTemp.setText(String.valueOf(singleDayWeather.getTempInCelsius()));
+            labelDay.setText(weather.getDate().toString());
+            labelTemp.setText(String.valueOf(weather.getTempInCelsius()));
         }
-    }
-
-    private void displayWeatherRight(WeatherForecast weatherForecast) {
-        Iterator<Group> groupIterator = groupRightList.iterator();
-        Iterator<SingleDayWeather> weatherIterator = weatherForecast.getWeathers().iterator();
-        while (groupIterator.hasNext() && weatherIterator.hasNext()) {
-            Group group = groupIterator.next();
-            SingleDayWeather singleDayWeather = weatherIterator.next();
-            Label labelDay = (Label) group.getChildren().get(1);
-            Label labelTemp = (Label) group.getChildren().get(2);
-            labelDay.setText(singleDayWeather.getDate().toString());
-            labelTemp.setText(String.valueOf(singleDayWeather.getTempInCelsius()));
-        }
+        //fill current weather group fields
+        Group group = groupIterator.next();
+        Label labelDay = (Label) group.getChildren().get(1);
+        Label labelTemp = (Label) group.getChildren().get(2);
+        labelDay.setText(currentWeatherAndForecast.getCurrentWeather().getDate().toString());
+        labelTemp.setText(String.valueOf(currentWeatherAndForecast.getCurrentWeather().getTempInCelsius()));
     }
 
 

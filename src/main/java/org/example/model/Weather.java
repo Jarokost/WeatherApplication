@@ -3,12 +3,12 @@ package org.example.model;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class SingleDayWeather {
+public class Weather {
 
     private final double tempInCelsius;
     private final LocalDate date;
 
-    public SingleDayWeather(double tempInCelsius, LocalDate date) {
+    public Weather(double tempInCelsius, LocalDate date) {
         this.tempInCelsius = tempInCelsius;
         this.date = date;
     }
@@ -25,7 +25,7 @@ public class SingleDayWeather {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SingleDayWeather that = (SingleDayWeather) o;
+        Weather that = (Weather) o;
         return Double.compare(tempInCelsius, that.tempInCelsius) == 0 && Objects.equals(date, that.date);
     }
 
