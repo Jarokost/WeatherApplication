@@ -1,13 +1,12 @@
 package org.example.model.client;
 
-import org.example.model.SingleDayWeather;
-import org.example.model.WeatherForecast;
+import org.example.model.Weather;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface WeatherClient {
 
-    SingleDayWeather currentWeather(String cityName);
+    Weather currentWeather(String cityName);
 
-    Collection<SingleDayWeather> forecast(String cityName);
+    List<Weather> forecast(String cityName);
 }

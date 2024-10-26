@@ -6,7 +6,7 @@ import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
-import org.example.model.SingleDayWeather;
+import org.example.model.Weather;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,7 +16,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.TimeZone;
 
 
@@ -24,8 +24,8 @@ public class OpenWeatherAPIWeatherClient implements WeatherClient {
 
 
     @Override
-    public SingleDayWeather currentWeather(String cityName) {
-        SingleDayWeather singleDayWeather;
+    public Weather currentWeather(String cityName) {
+        Weather weather;
 
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
 
@@ -35,7 +35,7 @@ public class OpenWeatherAPIWeatherClient implements WeatherClient {
                     "&units=" + "metric";
             ClassicHttpRequest httpGet = ClassicRequestBuilder.get(url).build();
 
-            singleDayWeather = httpclient.execute(httpGet, response -> {
+            weather = httpclient.execute(httpGet, response -> {
                 System.out.println("GET: " + response.getCode() + " " + response.getReasonPhrase());
                 final HttpEntity entity = response.getEntity();
 
@@ -49,19 +49,19 @@ public class OpenWeatherAPIWeatherClient implements WeatherClient {
                 BigDecimal temp = main.getBigDecimal("temp");
 
                 EntityUtils.consume(entity);
-                return new SingleDayWeather(temp.doubleValue(), date);
+                return new Weather(temp.doubleValue(), date);
             });
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        return singleDayWeather;
+        return weather;
     }
 
     @Override
-    public Collection<SingleDayWeather> forecast(String cityName) {
-        Collection<SingleDayWeather> forecast = new ArrayList<>();
+    public List<Weather> forecast(String cityName) {
+        List<Weather> forecast = new ArrayList<>();
 
         try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
 
@@ -81,7 +81,7 @@ public class OpenWeatherAPIWeatherClient implements WeatherClient {
                 JSONObject result = new JSONObject(retSrc);
                 JSONArray tokenList = result.getJSONArray("list");
 
-                Collection<SingleDayWeather> forecastCollection = new ArrayList<>();
+                List<Weather> forecastCollection = new ArrayList<>();
                 for(int i = 0, j = 0; i<40; i++) {
                     JSONObject singleDayObject = tokenList.getJSONObject(i);
                     Integer dt = singleDayObject.getInt("dt");
@@ -92,7 +92,7 @@ public class OpenWeatherAPIWeatherClient implements WeatherClient {
                     JSONObject main = singleDayObject.getJSONObject("main");
                     BigDecimal temp = main.getBigDecimal("temp");
                     if ( dateTime.getHour() == 12  ) {
-                        forecastCollection.add(new SingleDayWeather(temp.doubleValue(), date));
+                        forecastCollection.add(new Weather(temp.doubleValue(), date));
                     }
                 }
 
